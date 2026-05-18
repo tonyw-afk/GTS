@@ -47,27 +47,35 @@ public abstract class PokemonInfo {
 		Item ball = pokemon.getCaughtBall().item();
 
 		lore.add(Component.empty().setStyle(style).append(ColorUtil.parse(Gts.language.getPokemonBall()))
-				.append(Component.translatable(ball.getName(new ItemStack(ball)).getString()).setStyle(green)));
+				.append(Component.translatable(ball.getName(new ItemStack(ball)).getString()).setStyle(white)));
 
 		lore.add(Component.translatable("cobblemon.ui.info.species").setStyle(dark_green).append(": ")
-				.append(pokemon.getSpecies().getTranslatedName().setStyle(green)));
+				.append(pokemon.getSpecies().getTranslatedName().setStyle(white)));
 
-		MutableComponent types = Component.empty().setStyle(green);
+		MutableComponent types = Component.empty().setStyle(white);
 		for (ElementalType type : pokemon.getSpecies().getTypes()) {
 			types.append(" ").append(type.getDisplayName());
 		}
 		lore.add(Component.translatable("cobblemon.ui.info.type").setStyle(dark_green).append(":").append(types));
 
 		lore.add(Component.translatable("cobblemon.ui.info.nature").setStyle(dark_green).append(": ")
-				.append(Component.translatable(pokemon.getNature().getDisplayName()).setStyle(green)));
+				.append(Component.translatable(pokemon.getNature().getDisplayName()).setStyle(white)));
 
 		MutableComponent ability = Component.translatable("cobblemon.ui.info.ability").setStyle(dark_green)
 				.append(": ")
-				.append(Component.translatable(pokemon.getAbility().getDisplayName()).setStyle(green));
+				.append(Component.translatable(pokemon.getAbility().getDisplayName()).setStyle(white));
 		if (Utils.isHA(pokemon)) {
 			ability.append(Component.literal(" §b(HA)"));
 		}
 		lore.add(ability);
+
+		// Scale modifier display
+		float percentage = pokemon.getScaleModifier() * 100;
+		lore.add(Component.literal(""));
+
+		lore.add(Component.literal("§bSize: ").append("§f" + String.valueOf(percentage).split("\\.")[0] + "%"));
+
+		lore.add(Component.literal(""));
 
 		if (!pokemon.getPersistentData().getString("size").isEmpty()) {
 			lore.add(Component.literal("Size").setStyle(dark_green)
@@ -88,42 +96,44 @@ public abstract class PokemonInfo {
 		lore.add(Component.translatable("cobblemon.ui.stats").setStyle(gray).append(": "));
 
 		lore.add(Component.translatable("cobblemon.ui.stats.hp").setStyle(light_purple)
-			.append(" §8- §3IV: §a" +
+			.append(" §8- §3IV: §f" +
 				(pokemon.getIvs().get(Stats.HP) == null ? "0" :
 						pokemon.getIvs().get(Stats.HP))
-				+ " §cEV: §a" + (pokemon.getEvs().get(Stats.HP) == null ? "0" : pokemon.getEvs().get(Stats.HP))));
+				+ " §cEV: §f" + (pokemon.getEvs().get(Stats.HP) == null ? "0" : pokemon.getEvs().get(Stats.HP))));
 		lore.add(Component.translatable("cobblemon.ui.stats.atk").setStyle(red)
-			.append(" §8- §3IV: §a" + (pokemon.getIvs().get(Stats.ATTACK) == null ? "0" :
-				+ pokemon.getIvs().get(Stats.ATTACK)) + " §cEV: §a" +
+			.append(" §8- §3IV: §f" + (pokemon.getIvs().get(Stats.ATTACK) == null ? "0" :
+				+ pokemon.getIvs().get(Stats.ATTACK)) + " §cEV: §f" +
 				(pokemon.getEvs().get(Stats.ATTACK) == null ? "0" : pokemon.getEvs().get(Stats.ATTACK))));
 		lore.add(Component.translatable("cobblemon.ui.stats.def").setStyle(gold)
-			.append(" §8- §3IV: §a" + (pokemon.getIvs().get(Stats.DEFENCE) == null ? "0" :
-				+ pokemon.getIvs().get(Stats.DEFENCE)) + " §cEV: §a" +
+			.append(" §8- §3IV: §f" + (pokemon.getIvs().get(Stats.DEFENCE) == null ? "0" :
+				+ pokemon.getIvs().get(Stats.DEFENCE)) + " §cEV: §f" +
 				(pokemon.getEvs().get(Stats.DEFENCE) == null ? "0" :
 						pokemon.getEvs().get(Stats.DEFENCE))));
 		lore.add(Component.translatable("cobblemon.ui.stats.sp_atk").setStyle(dark_purple)
-			.append(" §8- §3IV: §a" + (pokemon.getIvs().get(Stats.SPECIAL_ATTACK) == null ? "0" :
-				+ pokemon.getIvs().get(Stats.SPECIAL_ATTACK)) + " §cEV: §a" +
+			.append(" §8- §3IV: §f" + (pokemon.getIvs().get(Stats.SPECIAL_ATTACK) == null ? "0" :
+				+ pokemon.getIvs().get(Stats.SPECIAL_ATTACK)) + " §cEV: §f" +
 				(pokemon.getEvs().get(Stats.SPECIAL_ATTACK) == null ? "0" :
 						pokemon.getEvs().get(Stats.SPECIAL_ATTACK))));
 		lore.add(Component.translatable("cobblemon.ui.stats.sp_def").setStyle(yellow)
-			.append(" §8- §3IV: §a" + (pokemon.getIvs().get(Stats.SPECIAL_DEFENCE) == null ? "0" :
-				+ pokemon.getIvs().get(Stats.SPECIAL_DEFENCE)) + " §cEV: §a" +
+			.append(" §8- §3IV: §f" + (pokemon.getIvs().get(Stats.SPECIAL_DEFENCE) == null ? "0" :
+				+ pokemon.getIvs().get(Stats.SPECIAL_DEFENCE)) + " §cEV: §f" +
 				(pokemon.getEvs().get(Stats.SPECIAL_DEFENCE) == null ? "0" :
 						pokemon.getEvs().get(Stats.SPECIAL_DEFENCE))));
 		lore.add(Component.translatable("cobblemon.ui.stats.speed").setStyle(dark_aqua)
-			.append(" §8- §3IV: §a" + (pokemon.getIvs().get(Stats.SPEED) == null ? "0" :
-				+ pokemon.getIvs().get(Stats.SPEED)) + " §cEV: §a" +
+			.append(" §8- §3IV: §f" + (pokemon.getIvs().get(Stats.SPEED) == null ? "0" :
+				+ pokemon.getIvs().get(Stats.SPEED)) + " §cEV: §f" +
 				(pokemon.getEvs().get(Stats.SPEED) == null ? "0" :
 						pokemon.getEvs().get(Stats.SPEED))));
 
-		lore.add(Component.translatable("cobblemon.ui.stats.friendship").setStyle(dark_green)
-				.append(": §a" + pokemon.getFriendship()));
+		lore.add(Component.literal(""));
 
-		lore.add(Component.translatable("cobblemon.ui.moves").setStyle(gold).append(": "));
-		for (Move move : pokemon.getMoveSet().getMoves()) {
-			lore.add(Component.translatable(move.getTemplate().getDisplayName().getString()).setStyle(white));
-		}
+		lore.add(Component.translatable("cobblemon.ui.stats.friendship").setStyle(dark_green)
+				.append(": §f" + pokemon.getFriendship()));
+
+//		lore.add(Component.translatable("cobblemon.ui.moves").setStyle(gold).append(": "));
+//		for (Move move : pokemon.getMoveSet().getMoves()) {
+//			lore.add(Component.translatable(move.getTemplate().getDisplayName().getString()).setStyle(white));
+//		}
 
 		if (Gts.config.isShowBreedable()) {
 

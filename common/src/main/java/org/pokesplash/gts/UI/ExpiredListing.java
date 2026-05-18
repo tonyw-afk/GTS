@@ -62,12 +62,12 @@ public class ExpiredListing {
 					if (success) {
 						message = Utils.formatPlaceholders(Gts.language.getReturnListingSuccess(),
 								0, listing.getListingName(), listing.getSellerName(),
-								action.getPlayer().getName().getString());
+								action.getPlayer().getName().getString(), 0);
 						action.getPlayer().sendSystemMessage(ColorUtil.parse(message));
 					} else {
 						message = Utils.formatPlaceholders(Gts.language.getReturnListingFail(),
 								0, listing.getListingName(), listing.getSellerName(),
-								action.getPlayer().getName().getString());
+								action.getPlayer().getName().getString(), 0);
 						action.getPlayer().sendSystemMessage(ColorUtil.parse(message));
 					}
 

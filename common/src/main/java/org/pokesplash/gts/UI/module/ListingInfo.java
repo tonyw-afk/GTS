@@ -41,6 +41,8 @@ public abstract class ListingInfo {
                             Utils.parseLongDate(listing.getEndTime() - new Date().getTime())));
         }
 
+        lore.add(Component.literal(""));
+
 
         if (!listing.isPokemon()) {
             ItemListing itemListing = (ItemListing) listing;

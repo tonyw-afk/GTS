@@ -45,7 +45,7 @@ public class Reload extends Subcommand {
 		Gts.reload();
 
 		context.getSource().sendSystemMessage(Component.literal(Utils.formatMessage(Utils.formatPlaceholders(Gts.language.getReloadMessage(),
-						0, null, null, null),
+						0, null, null, null, 0),
 				context.getSource().isPlayer())));
 
 

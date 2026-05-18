@@ -169,7 +169,7 @@ public class List extends Subcommand {
 					Gts.config.getMaxListingsPerPlayer()) {
 				context.getSource().sendSystemMessage(Component.literal(
 						Utils.formatPlaceholders(Gts.language.getMaximumListings(), 0, null,
-								context.getSource().getPlayer().getDisplayName().getString(), null)));
+								context.getSource().getPlayer().getDisplayName().getString(), null, 0)));
 				return 1;
 			}
 
@@ -199,7 +199,7 @@ public class List extends Subcommand {
 		// If no Pokemon in slot, send message to user.
 		if (pokemon == null) {
 			context.getSource().sendSystemMessage(Component.literal(Utils.formatPlaceholders(Gts.language.getNoPokemonInSlot(),
-					0, null, player.getDisplayName().getString(), null)));
+					0, null, player.getDisplayName().getString(), null, 0)));
 			return 1;
 		}
 
@@ -212,7 +212,7 @@ public class List extends Subcommand {
 		if (party.occupied() < 2) {
 			context.getSource().sendSystemMessage(Component.literal(Utils.formatPlaceholders(
 					Gts.language.getOnlyOnePokemonInParty(),
-					0, null, player.getDisplayName().getString(), null)));
+					0, null, player.getDisplayName().getString(), null, 0)));
 			return 1;
 		}
 
@@ -272,17 +272,23 @@ public class List extends Subcommand {
 			}
 		}
 
+		// Add shiny to name
+		String speciesName =  pokemon.getSpecies().getName();
+		if (pokemon.getShiny()){
+			speciesName = "Shiny " + pokemon.getSpecies().getName();
+		}
+
 		// If less than min price, cancel the command.
 		if (price < minPrice) {
 			context.getSource().sendSystemMessage(Component.literal(Utils.formatPlaceholders(Gts.language.getMinimumListingPrice(),
-					minPrice, pokemon.getDisplayName(Gts.showPokemonDisplayName).getString(), player.getDisplayName().getString(), null)));
+					minPrice, speciesName, player.getDisplayName().getString(), null, price)));
 			return 1;
 		}
 
 		// If the price is above the maximum price, cancel the command.
 		if (price > Gts.config.getMaximumPrice()) {
 			context.getSource().sendSystemMessage(Component.literal(Utils.formatPlaceholders(Gts.language.getMaximumListingPrice(),
-					minPrice, pokemon.getDisplayName(Gts.showPokemonDisplayName).getString(), player.getDisplayName().getString(), null)));
+					minPrice, speciesName, player.getDisplayName().getString(), null, price)));
 			return 1;
 		}
 
@@ -294,7 +300,7 @@ public class List extends Subcommand {
 				context.getSource().sendSystemMessage(Component.literal(
 						Utils.formatPlaceholders(Gts.language.getBannedPokemon(),
 						0, pokemon.getSpecies().getName(), player.getDisplayName().getString(),
-								null)));
+								null, 0)));
 				return 1;
 			}
 		}
@@ -305,12 +311,12 @@ public class List extends Subcommand {
 
 		if (success) {
 			context.getSource().sendSystemMessage(Component.literal(Utils.formatPlaceholders(Gts.language.getListingSuccess(),
-					minPrice, pokemon.getDisplayName(Gts.showPokemonDisplayName).getString(), player.getDisplayName().getString(), null)));
+					minPrice, speciesName, player.getDisplayName().getString(), null, price)));
 
 
 		} else {
 			context.getSource().sendSystemMessage(Component.literal(Utils.formatPlaceholders(Gts.language.getListingFail(),
-					minPrice, pokemon.getDisplayName(Gts.showPokemonDisplayName).getString(), player.getDisplayName().getString(), null)));
+					minPrice, speciesName, player.getDisplayName().getString(), null, price)));
 
 
 		}
@@ -342,24 +348,23 @@ public class List extends Subcommand {
 			// If they aren't holding an item. Message them
 			if (item == null) {
 				context.getSource().sendSystemMessage(Component.literal(Utils.formatPlaceholders(Gts.language.getNoItemInHand(),
-						0, null, player.getDisplayName().getString(), null)));
+						0, null, player.getDisplayName().getString(), null, 0)));
 				return 1;
 			}
 
 			// Checks the amount isn't 0.
 			if (amount <= 0) {
 				context.getSource().sendSystemMessage(Component.literal(Utils.formatPlaceholders(Gts.language.getZeroItemAmount(),
-						0, item.getDisplayName().getString(), player.getDisplayName().getString(), null)));
+						0, item.getDisplayName().getString(), player.getDisplayName().getString(), null, 0)));
 				return 1;
 			}
 
 			// Checks the item isn't banned.
 			for (JsonElement bannedItem : bannedItems) {
 				ItemStack banned = CodecUtils.decodeItem(bannedItem);
-				if (banned.getItem().equals(item.getItem()) &&
-						ItemStack.isSameItemSameComponents(banned, item)) {
+				if ((banned.getItem().equals(item.getItem()) && ItemStack.isSameItemSameComponents(banned, item)) || item.getItem().toString().contains("travelersbackpack")) {
 					context.getSource().sendSystemMessage(Component.literal(Utils.formatPlaceholders(Gts.language.getBannedItem(),
-							0, item.getDisplayName().getString(), player.getDisplayName().getString(), null)));
+							0, item.getDisplayName().getString(), player.getDisplayName().getString(), null, 0)));
 					return 1;
 				}
 			}
@@ -416,21 +421,21 @@ public class List extends Subcommand {
 			// If less than min price, cancel the command.
 			if (price < minPrice) {
 				context.getSource().sendSystemMessage(Component.literal(Utils.formatPlaceholders(Gts.language.getMinimumListingPrice(),
-						minPrice, item.getDisplayName().getString(), player.getDisplayName().getString(), null)));
+						minPrice, item.getDisplayName().getString(), player.getDisplayName().getString(), null, price)));
 				return 1;
 			}
 
 			// If the price is above the maximum price, cancel the command.
 			if (price > Gts.config.getMaximumPrice()) {
 				context.getSource().sendSystemMessage(Component.literal(Utils.formatPlaceholders(Gts.language.getMaximumListingPrice(),
-						minPrice, item.getDisplayName().getString(), player.getDisplayName().getString(), null)));
+						minPrice, item.getDisplayName().getString(), player.getDisplayName().getString(), null, price)));
 				return 1;
 			}
 
 			// Check there are enough items in the players inventory.
 			if (item.getCount() < amount) {
 				context.getSource().sendSystemMessage(Component.literal(Utils.formatPlaceholders(Gts.language.getInsufficientItems(),
-						minPrice, item.getDisplayName().getString(), player.getDisplayName().getString(), null)));
+						minPrice, item.getDisplayName().getString(), player.getDisplayName().getString(), null, price)));
 				return 1;
 
 
@@ -455,13 +460,14 @@ public class List extends Subcommand {
 				if (totalActiveListings + totalExpiredListigs >= Gts.config.getMaxListingsPerPlayer()) {
 					context.getSource().sendSystemMessage(Component.literal(
 							Utils.formatPlaceholders(Gts.language.getMaximumListings(), 0, null,
-									context.getSource().getPlayer().getDisplayName().getString(), null)));
+									context.getSource().getPlayer().getDisplayName().getString(), null, 0)));
 					break;
 				}
 
 				ItemStack listingItem = item.copy();
 				listingItem.setCount(stackSize);
 
+				// Creates the listing on GTS
 				ItemListing listing = new ItemListing(player.getUUID(), player.getName().getString(), price,
 						listingItem);
 
@@ -469,11 +475,11 @@ public class List extends Subcommand {
 
 				if (success) {
 					context.getSource().sendSystemMessage(Component.literal(Utils.formatPlaceholders(Gts.language.getListingSuccess(),
-							minPrice, listing.getListingName(), player.getDisplayName().getString(), null)));
+							minPrice, listing.getListingName(), player.getDisplayName().getString(), null, price)));
 
 				} else {
 					context.getSource().sendSystemMessage(Component.literal(Utils.formatPlaceholders(Gts.language.getListingFail(),
-							minPrice, listing.getListingName(), player.getDisplayName().getString(), null)));
+							minPrice, listing.getListingName(), player.getDisplayName().getString(), null, price)));
 
 
 				}
@@ -485,7 +491,7 @@ public class List extends Subcommand {
 
 		} catch (NullPointerException e) {
 			context.getSource().sendSystemMessage(Component.literal(Utils.formatPlaceholders(Gts.language.getItemIdNotFound(),
-					0, null, player.getDisplayName().getString(), null)));
+					0, null, player.getDisplayName().getString(), null, 0)));
 			Gts.LOGGER.error("Couldn't find Item ID\n Stacktrace: ");
 			e.printStackTrace();
 			return 1;

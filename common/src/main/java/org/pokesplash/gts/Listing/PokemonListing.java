@@ -101,6 +101,14 @@ public class PokemonListing extends Listing<Pokemon> {
 
 	@Override
 	public String getListingName() {
-		return getListing().getSpecies().toString();
+		// Add shiny to name
+		Pokemon pokemon = getListing();
+		String speciesName =  pokemon.getSpecies().getName();
+
+		if (pokemon.getShiny()){
+			speciesName = "Shiny " + pokemon.getSpecies().getName();
+		}
+
+		return speciesName;
 	}
 }

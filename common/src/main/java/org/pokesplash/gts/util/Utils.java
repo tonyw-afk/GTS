@@ -27,6 +27,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -340,10 +341,11 @@ public abstract class Utils {
 	 * @param listing The listing name placeholder replacement.
 	 * @param seller The seller name placeholder replacement.
 	 * @param buyer The buyer name placeholder replacement.
+	 * @param price The price name placeholder replacement.
 	 * @return
 	 */
 	public static String formatPlaceholders(String message, double minPrice, String listing,
-	                                        String seller, String buyer) {
+	                                        String seller, String buyer, double price) {
 		String newMessage = message;
 		if (message == null) {
 			return "";
@@ -361,10 +363,14 @@ public abstract class Utils {
 			newMessage = newMessage.replaceAll("\\{buyer\\}", buyer);
 		}
 
+		// Format price
+		DecimalFormat df = new DecimalFormat("#,##0");
+
 		return newMessage
 				.replaceAll("\\{min_price\\}", "" + minPrice)
 				.replaceAll("\\{max_listings\\}", "" + Gts.config.getMaxListingsPerPlayer())
-				.replaceAll("\\{max_price\\}", "" + Gts.config.getMaximumPrice());
+				.replaceAll("\\{max_price\\}", "" + Gts.config.getMaximumPrice())
+				.replaceAll("\\{price\\}", "" + df.format(price));
 	}
 
 	/**

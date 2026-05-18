@@ -68,7 +68,7 @@ public class SingleListing {
 							action.getPlayer().sendSystemMessage(
 									ColorUtil.parse(Utils.formatPlaceholders(Gts.language.getInsufficientInventorySpace(),
 											0, listing.getListingName(), listing.getSellerName(),
-											action.getPlayer().getName().getString())));
+											action.getPlayer().getName().getString(), 0)));
 							UIManager.closeUI(action.getPlayer());
 							return;
 						}
@@ -81,7 +81,7 @@ public class SingleListing {
 								ColorUtil.parse(
 										Utils.formatPlaceholders(Gts.language.getInsufficientFunds(),
 												0, listing.getListingName(), listing.getSellerName(),
-												action.getPlayer().getName().getString())));
+												action.getPlayer().getName().getString(), 0)));
 						return;
 					}
 
@@ -94,7 +94,7 @@ public class SingleListing {
 								ColorUtil.parse(
 										Utils.formatPlaceholders(Gts.language.getPurchaseMessageBuyer(),
 												0, listing.getListingName(), listing.getSellerName(),
-												action.getPlayer().getName().getString())));
+												action.getPlayer().getName().getString(), 0)));
 
 						ServerPlayer seller =
 								action.getPlayer().getServer().getPlayerList().getPlayer(listing.getSellerUuid());
@@ -105,7 +105,7 @@ public class SingleListing {
 									ColorUtil.parse(
 											Utils.formatPlaceholders(Gts.language.getListingBought(),
 													0, listing.getListingName(), listing.getSellerName(),
-													action.getPlayer().getName().getString())));
+													action.getPlayer().getName().getString(), 0)));
 						}
 
 					} catch (Exception e) {
@@ -144,7 +144,7 @@ public class SingleListing {
 							ColorUtil.parse(
 									Utils.formatPlaceholders(Gts.language.getCancelListing(),
 									0, listing.getListingName(), listing.getSellerName(),
-									action.getPlayer().getName().getString()));
+									action.getPlayer().getName().getString(), 0));
 
 					action.getPlayer().sendSystemMessage(message);
 

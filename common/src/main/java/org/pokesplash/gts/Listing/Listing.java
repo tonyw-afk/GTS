@@ -88,7 +88,7 @@ public abstract class Listing<T> {
     }
 
     public String getPriceAsString() {
-        DecimalFormat df = new DecimalFormat("0.##");
+        DecimalFormat df = new DecimalFormat("#,##0");
         return df.format(price);
     }
 

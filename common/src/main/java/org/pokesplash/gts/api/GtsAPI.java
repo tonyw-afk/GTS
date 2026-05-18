@@ -91,7 +91,7 @@ public abstract class GtsAPI {
 
 		if (Gts.config.isBroadcastListings()) {
 			Utils.broadcastClickable(Utils.formatPlaceholders(Gts.language.getNewListingBroadcast(), 0,
-							listing.getListingName(), listing.getSellerName(), null),
+							listing.getListingName(), listing.getSellerName(), null, listing.getPrice()),
 					"/gts " + listing.getId());
 		}
 

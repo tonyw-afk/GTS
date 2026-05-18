@@ -67,7 +67,14 @@ public class ItemListing extends Listing<ItemStack> {
 
 	@Override
 	public String getListingName() {
-		return getListing().getDisplayName().getString()
+		int stackSize = getListing().getCount();
+		String listingName = getListing().getDisplayName().getString();
+
+		if (stackSize > 1) {
+			listingName = stackSize + "x " + listingName;
+		}
+
+		return listingName
 				.replaceAll("\\[", "")
 				.replaceAll("\\]", "");
 	}
