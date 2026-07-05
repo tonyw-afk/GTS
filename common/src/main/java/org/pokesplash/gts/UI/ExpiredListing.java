@@ -17,6 +17,7 @@ import org.pokesplash.gts.Listing.PokemonListing;
 import org.pokesplash.gts.UI.button.Filler;
 import org.pokesplash.gts.UI.module.PokemonInfo;
 import org.pokesplash.gts.api.GtsAPI;
+import org.pokesplash.gts.enumeration.Sort;
 import org.pokesplash.gts.util.ColorUtil;
 import org.pokesplash.gts.util.Utils;
 
@@ -71,7 +72,7 @@ public class ExpiredListing {
 						action.getPlayer().sendSystemMessage(ColorUtil.parse(message));
 					}
 
-					UIManager.openUIForcefully(action.getPlayer(), new ExpiredListings().getPage(action.getPlayer().getUUID()));
+					UIManager.openUIForcefully(action.getPlayer(), new ExpiredListings().getPage(action.getPlayer().getUUID(), Sort.DATE_REVERSED));
 				})
 				.build();
 
@@ -81,7 +82,7 @@ public class ExpiredListing {
 						ColorUtil.parse(Gts.language.getCancelPurchaseButtonLabel()))
 				.onClick((action) -> {
 					ServerPlayer sender = action.getPlayer();
-					Page page = new ExpiredListings().getPage(action.getPlayer().getUUID());
+					Page page = new ExpiredListings().getPage(action.getPlayer().getUUID(), Sort.DATE_REVERSED);
 					UIManager.openUIForcefully(sender, page);
 				})
 				.build();

@@ -11,6 +11,7 @@ import org.pokesplash.gts.Gts;
 import org.pokesplash.gts.UI.AllListings;
 import org.pokesplash.gts.command.subcommand.*;
 import org.pokesplash.gts.command.superclass.BaseCommand;
+import org.pokesplash.gts.enumeration.Sort;
 
 import java.util.Arrays;
 import java.util.concurrent.Executors;
@@ -55,7 +56,7 @@ public class GtsCommand extends BaseCommand {
 	public void runSync(ServerPlayer player) {
 
 		try {
-			Page page = new AllListings().getPage();
+			Page page = new AllListings().getPage(Sort.DATE_REVERSED);
 
 			UIManager.openUIForcefully(player, page);
 		} catch (Exception e) {
@@ -71,7 +72,7 @@ public class GtsCommand extends BaseCommand {
 
 		ASYNC_EXEC.submit(() -> {
 			try {
-				Page page = new AllListings().getPage();
+				Page page = new AllListings().getPage(Sort.DATE_REVERSED);
 
 				Gts.server.execute(() -> {
 					UIManager.openUIForcefully(player, page);

@@ -7,6 +7,7 @@ import ca.landonjw.gooeylibs2.api.page.Page;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
 import org.pokesplash.gts.Gts;
+import org.pokesplash.gts.enumeration.Sort;
 import org.pokesplash.gts.util.ColorUtil;
 
 public abstract class ExpiredListings {
@@ -17,7 +18,7 @@ public abstract class ExpiredListings {
                         ColorUtil.parse(Gts.language.getExpiredListingButtonLabel()))
                 .onClick((action) -> {
                     ServerPlayer sender = action.getPlayer();
-                    Page page = new org.pokesplash.gts.UI.ExpiredListings().getPage(action.getPlayer().getUUID());
+                    Page page = new org.pokesplash.gts.UI.ExpiredListings().getPage(action.getPlayer().getUUID(), Sort.DATE_REVERSED);
                     UIManager.openUIForcefully(sender, page);
                 })
                 .build();

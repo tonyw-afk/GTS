@@ -62,6 +62,9 @@ public class Open extends Subcommand {
 		if (listing != null) {
 			UIManager.openUIForcefully(sender, new SingleListing().getPage(sender, listing));
 		}
+		else {
+			context.getSource().sendSystemMessage(Component.literal(Gts.language.getListingUnavailable()));
+		}
 		return 1;
 	}
 }

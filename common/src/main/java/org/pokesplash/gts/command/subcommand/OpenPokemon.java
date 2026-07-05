@@ -55,7 +55,7 @@ public class OpenPokemon extends Subcommand {
 
 		ServerPlayer player = context.getSource().getPlayer();
 
-        Page page = new PokemonListings().getPage(Sort.NONE);
+        Page page = new PokemonListings().getPage(Sort.DATE_REVERSED);
 
         UIManager.openUIForcefully(player, page);
 		return 1;

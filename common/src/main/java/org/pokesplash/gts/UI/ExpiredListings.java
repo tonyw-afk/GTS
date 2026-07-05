@@ -19,6 +19,7 @@ import org.pokesplash.gts.UI.button.ManageListings;
 import org.pokesplash.gts.UI.button.*;
 import org.pokesplash.gts.UI.module.ListingInfo;
 import org.pokesplash.gts.UI.module.PokemonInfo;
+import org.pokesplash.gts.enumeration.Sort;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,7 @@ public class ExpiredListings {
 	 * Method that returns the page.
 	 * @return Pokemon Listings page.
 	 */
-	public Page getPage(UUID owner) {
+	public Page getPage(UUID owner, Sort sort) {
 
 		PlaceholderButton placeholder = new PlaceholderButton();
 
@@ -65,13 +66,16 @@ public class ExpiredListings {
 		}
 
 		ChestTemplate template = ChestTemplate.builder(6)
-				.rectangle(0, 0, 5, 9, placeholder)
+				.rectangle(1, 0, 4, 9, placeholder)
 				.fill(Filler.getButton())
-				.set(48, SeePokemonListings.getButton())
-				.set(49, ManageListings.getButton())
-				.set(50, SeeItemListings.getButton())
-				.set(53, NextPage.getButton())
+				.set(0, SeePokemonListings.getButton(sort))
+				.set(1, SeeItemListings.getButton(sort))
+				.set(2, SeeAllListings.getButton(sort))
+
 				.set(45, PreviousPage.getButton())
+				.set(53, NextPage.getButton())
+
+				.set(51, ManageListings.getButton())
 				.set(52, RelistAll.getButton())
 				.build();
 

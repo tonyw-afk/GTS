@@ -18,6 +18,7 @@ import org.pokesplash.gts.UI.button.Filler;
 import org.pokesplash.gts.UI.module.ListingInfo;
 import org.pokesplash.gts.UI.module.PokemonInfo;
 import org.pokesplash.gts.api.GtsAPI;
+import org.pokesplash.gts.enumeration.Sort;
 import org.pokesplash.gts.util.ColorUtil;
 import org.pokesplash.gts.util.Utils;
 
@@ -123,7 +124,7 @@ public class SingleListing {
 						ColorUtil.parse(Gts.language.getCancelPurchaseButtonLabel()))
 				.onClick((action) -> {
 					ServerPlayer sender = action.getPlayer();
-					Page page = new AllListings().getPage();
+					Page page = new AllListings().getPage(Sort.DATE_REVERSED);
 					UIManager.openUIForcefully(sender, page);
 				})
 				.build();
@@ -154,7 +155,6 @@ public class SingleListing {
 					if (seller != null && !seller.getUUID().equals(action.getPlayer().getUUID())) {
 						seller.sendSystemMessage(message);
 					}
-
 					UIManager.closeUI(action.getPlayer());
 				})
 				.build();

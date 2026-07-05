@@ -60,7 +60,7 @@ public class OpenItems extends Subcommand {
 
 		ServerPlayer player = context.getSource().getPlayer();
 
-        Page page = new ItemListings().getPage(Sort.NONE);
+        Page page = new ItemListings().getPage(Sort.DATE_REVERSED);
 
         UIManager.openUIForcefully(player, page);
 		return 1;

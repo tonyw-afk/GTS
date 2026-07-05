@@ -14,7 +14,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.component.ItemLore;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.pokesplash.gts.Gts;
 import org.pokesplash.gts.Listing.PokemonListing;
 import org.pokesplash.gts.UI.button.ManageListings;
@@ -43,10 +42,20 @@ public class PokemonListings {
 
 		if (sort.equals(Sort.PRICE)) {
 			pkmListings.sort(Comparator.comparingDouble(PokemonListing::getPrice));
-		} else if (sort.equals(Sort.DATE)) {
+		} else if (sort.equals(Sort.PRICE_REVERSED)) {
+			pkmListings.reversed().sort(Comparator.comparingDouble(PokemonListing::getPrice));
+		}
+
+		if (sort.equals(Sort.DATE)) {
 			pkmListings.sort(Comparator.comparingLong(PokemonListing::getEndTime));
-		} else if (sort.equals(Sort.NAME)) {
-			pkmListings.sort(Comparator.comparing(PokemonListing::getListingName));
+		} else if (sort.equals(Sort.DATE_REVERSED)) {
+			pkmListings.reversed().sort(Comparator.comparingLong(PokemonListing::getEndTime));
+		}
+
+		if (sort.equals(Sort.NAME)) {
+			pkmListings.sort(Comparator.comparing(pokemonListing -> pokemonListing.getDisplayName().getString()));
+		} else if (sort.equals(Sort.NAME_REVERSED)) {
+			pkmListings.reversed().sort(Comparator.comparing(pokemonListing -> pokemonListing.getDisplayName().getString()));
 		}
 
 		Button sortByPriceButton = GooeyButton.builder()
@@ -55,7 +64,12 @@ public class PokemonListings {
 						ColorUtil.parse(Gts.language.getSortByPriceButtonLabel()))
 				.onClick((action) -> {
 					ServerPlayer sender = action.getPlayer();
-					Page page = new PokemonListings().getPage(Sort.PRICE);
+					Page page;
+					if (sort.equals(Sort.PRICE)) {
+						page = new PokemonListings().getPage(Sort.PRICE_REVERSED);
+					} else {
+						page = new PokemonListings().getPage(Sort.PRICE);
+					}
 					UIManager.openUIForcefully(sender, page);
 				})
 				.build();
@@ -66,7 +80,12 @@ public class PokemonListings {
 						ColorUtil.parse(Gts.language.getSortByNewestButtonLabel()))
 				.onClick((action) -> {
 					ServerPlayer sender = action.getPlayer();
-					Page page = new PokemonListings().getPage(Sort.DATE);
+					Page page;
+					if (sort.equals(Sort.DATE)) {
+						page = new PokemonListings().getPage(Sort.DATE_REVERSED);
+					} else {
+						page = new PokemonListings().getPage(Sort.DATE);
+					}
 					UIManager.openUIForcefully(sender, page);
 				})
 				.build();
@@ -77,7 +96,12 @@ public class PokemonListings {
 						ColorUtil.parse(Gts.language.getSortByPokemonButtonLabel()))
 				.onClick((action) -> {
 					ServerPlayer sender = action.getPlayer();
-					Page page = new PokemonListings().getPage(Sort.NAME);
+					Page page;
+					if (sort.equals(Sort.NAME)) {
+						page = new PokemonListings().getPage(Sort.NAME_REVERSED);
+					} else {
+						page = new PokemonListings().getPage(Sort.NAME);
+					}
 					UIManager.openUIForcefully(sender, page);
 				})
 				.build();
@@ -103,15 +127,20 @@ public class PokemonListings {
 		}
 
 		ChestTemplate template = ChestTemplate.builder(6)
-				.rectangle(0, 0, 5, 9, placeholder)
+				.rectangle(1, 0, 4, 9, placeholder)
 				.fill(Filler.getButton())
-				.set(47, sortByPriceButton)
-				.set(48, sortByNewestButton)
-				.set(49, sortByNameButton)
-				.set(50, SeeItemListings.getButton())
-				.set(51, ManageListings.getButton())
-				.set(53, NextPage.getButton())
+				.set(0, Barrier.getButton())
+				.set(1, SeeItemListings.getButton(sort))
+				.set(2, SeeAllListings.getButton(sort))
+
+				.set(6, sortByPriceButton)
+				.set(7, sortByNewestButton)
+				.set(8, sortByNameButton)
+
 				.set(45, PreviousPage.getButton())
+				.set(53, NextPage.getButton())
+
+				.set(51, ManageListings.getButton())
 				.set(52, RelistAll.getButton())
 				.build();
 

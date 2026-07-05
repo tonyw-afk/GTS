@@ -11,6 +11,7 @@ import net.minecraft.server.level.ServerPlayer;
 import org.pokesplash.gts.Gts;
 import org.pokesplash.gts.UI.ExpiredListings;
 import org.pokesplash.gts.command.superclass.Subcommand;
+import org.pokesplash.gts.enumeration.Sort;
 
 public class Expired extends Subcommand {
 
@@ -52,7 +53,7 @@ public class Expired extends Subcommand {
 
 		ServerPlayer sender = context.getSource().getPlayer();
 
-		Page page = new ExpiredListings().getPage(sender.getUUID());
+		Page page = new ExpiredListings().getPage(sender.getUUID(), Sort.DATE_REVERSED);
 
 		UIManager.openUIForcefully(sender, page);
 

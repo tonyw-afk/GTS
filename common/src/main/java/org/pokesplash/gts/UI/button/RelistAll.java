@@ -8,6 +8,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
 import org.pokesplash.gts.Gts;
 import org.pokesplash.gts.UI.AllListings;
+import org.pokesplash.gts.enumeration.Sort;
 import org.pokesplash.gts.util.ColorUtil;
 
 public abstract class RelistAll {
@@ -19,7 +20,7 @@ public abstract class RelistAll {
                 .onClick((action) -> {
                     ServerPlayer sender = action.getPlayer();
                     Gts.listings.relistAllExpiredListings(sender.getUUID());
-                    Page page = new AllListings().getPage();
+                    Page page = new AllListings().getPage(Sort.NONE);
                     UIManager.openUIForcefully(sender, page);
                 })
                 .build();

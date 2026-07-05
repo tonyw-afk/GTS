@@ -13,7 +13,7 @@ import org.pokesplash.gts.enumeration.Sort;
 import org.pokesplash.gts.util.ColorUtil;
 
 public abstract class SeePokemonListings {
-    public static Button getButton() {
+    public static Button getButton(Sort sort) {
         return GooeyButton.builder()
                 .display(Gts.language.getPokemonListingsButtonItem())
                 .with(DataComponents.CUSTOM_NAME,
@@ -21,7 +21,7 @@ public abstract class SeePokemonListings {
                 .with(DataComponents.HIDE_ADDITIONAL_TOOLTIP, Unit.INSTANCE)
                 .onClick((action) -> {
                     ServerPlayer sender = action.getPlayer();
-                    Page page = new PokemonListings().getPage(Sort.NONE);
+                    Page page = new PokemonListings().getPage(sort);
                     UIManager.openUIForcefully(sender, page);
                 })
                 .build();

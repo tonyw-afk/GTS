@@ -61,6 +61,7 @@ public class Lang {
 	private String newListingBroadcast; // Message sent when a new listing is added.
 	private String insufficientInventorySpace; // Message sent when a player doesn't have enough inventory space to receive a listing.
 	private String onlyOnePokemonInParty; // Message sent when a player tries to list a Pokemon when they only have one in their party.
+	private String listingUnavailable;
 
 	/**
 	 *  Button Labels
@@ -69,6 +70,7 @@ public class Lang {
 	private String confirmPurchaseButtonLabel; // The name of the "Confirm Purchase" button.
 	private String cancelPurchaseButtonLabel; // The name of the "Cancel Purchase" button.
 	private String removeListingButtonLabel; // The name of the "Remove Listing" button.
+	private String allListingsButtonLabel; // The name of the "See All Item Listings" button.
 	private String itemListingsButtonLabel; // The name of the "See Item Listings" button.
 	private String pokemonListingsButtonLabel; // The name of the "See Pokemon Listings" button.
 	private String manageListingsButtonLabel; // The name of the "Manage Listings" button.
@@ -87,6 +89,7 @@ public class Lang {
 	 * Button Materials
 	 */
 
+	private JsonElement allListingsButtonItem;
 	private JsonElement itemListingsButtonItem; // The display item for the "item listings" menu.
 	private JsonElement pokemonListingsButtonItem; // The display item for the "pokemon listings" menu.
 	private JsonElement manageListingsButtonItem; // The display item for the "manage listings" menu.
@@ -149,6 +152,7 @@ public class Lang {
 		reloadMessage = "§2Reloaded Configs!";
 		insufficientFunds = "§cYou do not have enough money to purchase this listing!";
 		listingBought = "§2Your {listing} has been bought by {buyer}";
+		allListingsButtonItem = CodecUtils.encodeItem(new ItemStack(CobblemonItems.GILDED_CHEST));
 		itemListingsButtonItem = CodecUtils.encodeItem(new ItemStack(CobblemonItems.ASSAULT_VEST));
 		pokemonListingsButtonItem = CodecUtils.encodeItem(new ItemStack(CobblemonItems.POKE_BALL));
 		manageListingsButtonItem = CodecUtils.encodeItem(new ItemStack(CobblemonItems.SACHET));
@@ -171,6 +175,7 @@ public class Lang {
 		confirmPurchaseButtonLabel = "§2Confirm Purchase";
 		cancelPurchaseButtonLabel = "§cCancel Purchase";
 		removeListingButtonLabel = "§6Remove Listing";
+		allListingsButtonLabel = "§9See All Listings";
 		itemListingsButtonLabel = "§9See Item Listings";
 		pokemonListingsButtonLabel = "§9See Pokemon Listings";
 		manageListingsButtonLabel = "§dManage Listings";
@@ -184,6 +189,7 @@ public class Lang {
 		insufficientInventorySpace = "§cYou do not have enough inventory space to receive this listing.";
 		onlyOnePokemonInParty = "§cYou can not list a Pokemon to GTS if you only have less than 2 Pokemon in your party.";
 		expiredListingButtonLabel = "§cExpired Listings";
+		listingUnavailable = "§3§l[GTS]§r §cListing is not unavailable anymore!";
 		pokemonBall = "§2Ball: ";
 	}
 
@@ -252,9 +258,10 @@ public class Lang {
 	public String getListingBought() {
 		return listingBought;
 	}
-	public ItemStack getItemListingsButtonItem() {
-		return CodecUtils.decodeItem(itemListingsButtonItem);
+	public ItemStack getAllListingsButtonItem() {
+		return CodecUtils.decodeItem(allListingsButtonItem);
 	}
+	public ItemStack getItemListingsButtonItem() {return CodecUtils.decodeItem(itemListingsButtonItem);}
 	public ItemStack getPokemonListingsButtonItem() {
 		return CodecUtils.decodeItem(pokemonListingsButtonItem);
 	}
@@ -316,9 +323,10 @@ public class Lang {
 	public String getRemoveListingButtonLabel() {
 		return removeListingButtonLabel;
 	}
-	public String getItemListingsButtonLabel() {
-		return itemListingsButtonLabel;
+	public String getAllListingsButtonLabel() {
+		return allListingsButtonLabel;
 	}
+	public String getItemListingsButtonLabel() {return itemListingsButtonLabel;}
 	public String getPokemonListingsButtonLabel() {
 		return pokemonListingsButtonLabel;
 	}
@@ -388,6 +396,9 @@ public class Lang {
 	}
 	public String getPokemonBall() {
 		return pokemonBall;
+	}
+	public String getListingUnavailable() {
+		return listingUnavailable;
 	}
 
 	public CompletableFuture<Boolean> write() {

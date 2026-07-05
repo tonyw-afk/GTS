@@ -20,6 +20,7 @@ import org.pokesplash.gts.UI.button.*;
 import org.pokesplash.gts.UI.module.ListingInfo;
 import org.pokesplash.gts.UI.module.PokemonInfo;
 import org.pokesplash.gts.api.provider.ListingAPI;
+import org.pokesplash.gts.enumeration.Sort;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,13 +71,17 @@ public class FilteredListings {
 		}
 
 		ChestTemplate template = ChestTemplate.builder(6)
-				.rectangle(0, 0, 5, 9, placeholder)
+				.rectangle(1, 0, 4, 9, placeholder)
 				.fill(Filler.getButton())
-				.set(48, SeePokemonListings.getButton())
-				.set(49, ManageListings.getButton())
-				.set(50, SeeItemListings.getButton())
-				.set(53, NextPage.getButton())
+				.set(0, SeePokemonListings.getButton(Sort.DATE_REVERSED))
+				.set(1, SeeItemListings.getButton(Sort.DATE_REVERSED))
+				.set(2, SeeAllListings.getButton(Sort.DATE_REVERSED))
+
+
 				.set(45, PreviousPage.getButton())
+				.set(53, NextPage.getButton())
+
+				.set(51, ManageListings.getButton())
 				.set(52, RelistAll.getButton())
 				.build();
 

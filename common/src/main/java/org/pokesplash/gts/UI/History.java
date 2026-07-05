@@ -16,6 +16,7 @@ import org.pokesplash.gts.Gts;
 import org.pokesplash.gts.UI.button.ManageListings;
 import org.pokesplash.gts.UI.button.*;
 import org.pokesplash.gts.UI.module.PokemonInfo;
+import org.pokesplash.gts.enumeration.Sort;
 import org.pokesplash.gts.history.HistoryItem;
 import org.pokesplash.gts.history.ItemHistoryItem;
 import org.pokesplash.gts.history.PlayerHistory;
@@ -101,9 +102,9 @@ public class History {
 		ChestTemplate template = ChestTemplate.builder(6)
 				.rectangle(0, 0, 5, 9, placeholder)
 				.fill(Filler.getButton())
-				.set(48, SeePokemonListings.getButton())
+				.set(48, SeePokemonListings.getButton(Sort.DATE_REVERSED))
 				.set(49, ManageListings.getButton())
-				.set(50, SeeItemListings.getButton())
+				.set(50, SeeItemListings.getButton(Sort.DATE_REVERSED))
 				.set(53, NextPage.getButton())
 				.set(45, PreviousPage.getButton())
 				.build();
