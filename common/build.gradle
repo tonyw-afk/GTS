@@ -1,20 +1,20 @@
 dependencies {
     // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
     // Do NOT use other classes from fabric loader
-    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
 
-    modImplementation("ca.landonjw.gooeylibs:api:${rootProject.gooeylibs_version}")
-//    modApi("curse.maven:cobblemon-687131:${rootProject.cobblemon_file_version}")
-    modImplementation("com.cobblemon:mod:${rootProject.cobblemon_version}")
-    modImplementation("net.impactdev.impactor.api:economy:${rootProject.impactor_version}") {
+    modImplementation("ca.landonjw.gooeylibs:api:${gooeylibs_version}")
+//    modApi("curse.maven:cobblemon-687131:${cobblemon_file_version}")
+    modImplementation("com.cobblemon:mod:${cobblemon_version}")
+    modImplementation("net.impactdev.impactor.api:economy:${impactor_version}") {
         transitive = false
     }
-    modApi("net.impactdev.impactor.api:core:${rootProject.impactor_version}") {
+    modApi("net.impactdev.impactor.api:core:${impactor_version}") {
         transitive = false
     }
-    implementation("net.kyori:adventure-api:${rootProject.kyori_version}")
-    implementation("net.kyori:adventure-text-minimessage:${rootProject.kyori_version}")
-    implementation("net.kyori:adventure-text-serializer-gson:${rootProject.kyori_version}")
+    implementation("net.kyori:adventure-api:${kyori_version}")
+    implementation("net.kyori:adventure-text-minimessage:${kyori_version}")
+    implementation("net.kyori:adventure-text-serializer-gson:${kyori_version}")
 }
 
 architectury {
@@ -24,7 +24,7 @@ architectury {
 publishing {
     publications {
         mavenCommon(MavenPublication) {
-            artifactId = rootProject.archives_base_name
+            artifactId = archives_base_name
             from components.java
         }
     }

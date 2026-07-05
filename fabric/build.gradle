@@ -16,16 +16,20 @@ configurations {
 }
 
 dependencies {
-    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
-    modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
+    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+    modApi "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
 
-    modImplementation(include("ca.landonjw.gooeylibs:fabric-api-repack:${rootProject.gooeylibs_version}"))
+    modImplementation(include("ca.landonjw.gooeylibs:fabric-api-repack:${gooeylibs_version}"))
     include(modImplementation('me.lucko:fabric-permissions-api:0.3.1'))
 
     modImplementation include("net.kyori:adventure-platform-fabric:5.14.1")
+
+    // Cobblemon
+    modImplementation "net.fabricmc:fabric-language-kotlin:1.13.10+kotlin.2.3.20"
+    modImplementation "com.cobblemon:fabric:${cobblemon_version}"
 }
 
 processResources {
@@ -66,7 +70,7 @@ components.java {
 publishing {
     publications {
         mavenFabric(MavenPublication) {
-            artifactId = rootProject.archives_base_name + "-" + project.name
+            artifactId = archives_base_name + "-" + project.name
             from components.java
         }
     }

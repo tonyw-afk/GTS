@@ -63,10 +63,9 @@ public abstract class ListingInfo {
 
             boolean isItemBlocked = false;
 
-            for (String blockedItemId  : blockedItemDescriptions) {
+            for (String blockedItemId : blockedItemDescriptions) {
                 if (itemListing.getListing().getItem().getDescriptionId().contains(blockedItemId)) {
                     isItemBlocked = true;
-                    break;
                 }
             }
 
