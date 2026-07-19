@@ -13,6 +13,8 @@ import net.minecraft.world.item.ItemStack;
 import org.pokesplash.gts.Gts;
 import org.pokesplash.gts.command.superclass.Subcommand;
 
+import java.text.DecimalFormat;
+
 public class GetPrice extends Subcommand {
 
 	public GetPrice() {
@@ -66,11 +68,19 @@ public class GetPrice extends Subcommand {
 			}
 
 			double price = Gts.history.getAveragePrice(item);
+			DecimalFormat df = new DecimalFormat("#,###.##");
+
 
 			if (price != 0) {
-				context.getSource().sendSystemMessage(Component.literal(
-						"§aAverage price is $" + price + "."
-				));
+				if(item.getCount() > 1) {
+					context.getSource().sendSystemMessage(Component.literal(
+							"§aAverage price for " + item.getCount() + "x is $" + df.format(price * item.getCount()) + " ($" + df.format(price) + " per item)"
+					));
+				} else {
+					context.getSource().sendSystemMessage(Component.literal(
+							"§aAverage price is $" + df.format(price)
+					));
+				}
 			} else {
 				context.getSource().sendSystemMessage(Component.literal(
 						"§cThis item has not been sold before."
