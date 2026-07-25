@@ -43,12 +43,14 @@ public class ManageListings {
 		List<Button> buttons = new ArrayList<>();
 		if (!listings.isEmpty()) {
 			listings.forEach(listing -> {
-				List<Component> lore = ListingInfo.parse(listing);
+				List<Component> lore = new ArrayList<>();
 
 				if (listing.isPokemon()) {
 					PokemonListing pokemonListing = (PokemonListing) listing;
 					lore.addAll(PokemonInfo.parse(pokemonListing.getListing()));
 				}
+
+				lore.addAll(ListingInfo.parse(listing));
 
 				Button button = GooeyButton.builder()
 						.display(listing.getIcon())

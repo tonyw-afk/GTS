@@ -49,11 +49,13 @@ public class FilteredListings {
 
 			if (listing.getListingName().toLowerCase(Locale.ROOT).contains(searchValue.toLowerCase(Locale.ROOT))
 				|| listing.getSellerName().toLowerCase(Locale.ROOT).contains(searchValue.toLowerCase(Locale.ROOT))) {
-				List<Component> lore = ListingInfo.parse(listing);
+				List<Component> lore = new ArrayList<>();
 
 				if (listing.isPokemon()) {
 					lore.addAll(PokemonInfo.parse((PokemonListing) listing));
 				}
+
+				lore.addAll(ListingInfo.parse(listing));
 
 				Button button = GooeyButton.builder()
 						.display(listing.getIcon())

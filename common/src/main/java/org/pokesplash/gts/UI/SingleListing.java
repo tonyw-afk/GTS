@@ -22,6 +22,7 @@ import org.pokesplash.gts.enumeration.Sort;
 import org.pokesplash.gts.util.ColorUtil;
 import org.pokesplash.gts.util.Utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,11 +36,13 @@ public class SingleListing {
 	 */
 	public Page getPage(ServerPlayer viewer, Listing listing) {
 
-		List<Component> lore = ListingInfo.parse(listing);
+		List<Component> lore = new ArrayList<>();
 
 		if (listing.isPokemon()) {
 			lore.addAll(PokemonInfo.parse((PokemonListing) listing));
 		}
+
+		lore.addAll(ListingInfo.parse(listing));
 
 		Button pokemon = GooeyButton.builder()
 				.display(listing.getIcon())

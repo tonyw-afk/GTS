@@ -72,9 +72,7 @@ public abstract class PokemonInfo {
 		// Scale modifier display
 		float percentage = pokemon.getScaleModifier() * 100;
 		lore.add(Component.literal(""));
-
 		lore.add(Component.literal("§bSize: ").append("§f" + String.valueOf(percentage).split("\\.")[0] + "%"));
-
 		lore.add(Component.literal(""));
 
 		if (!pokemon.getPersistentData().getString("size").isEmpty()) {
@@ -144,6 +142,7 @@ public abstract class PokemonInfo {
 				lore.add(Component.literal("§bBreedable"));
 			}
 		}
+
 		return lore;
 	}
 

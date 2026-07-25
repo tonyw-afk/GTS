@@ -115,11 +115,13 @@ public class AllListings {
 				.build();
 
 		for (Listing listing : listings) {
-			List<Component> lore = ListingInfo.parse(listing);
+			List<Component> lore = new ArrayList<>();
 
 			if (listing.isPokemon()) {
 				lore.addAll(PokemonInfo.parse((PokemonListing) listing));
 			}
+
+			lore.addAll(ListingInfo.parse(listing));
 
 			Button button = GooeyButton.builder()
 					.display(listing.getIcon())

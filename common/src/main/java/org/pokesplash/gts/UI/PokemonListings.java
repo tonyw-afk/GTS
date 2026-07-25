@@ -110,8 +110,9 @@ public class PokemonListings {
 
 		List<Button> pokemonButtons = new ArrayList<>();
 		for (PokemonListing listing : pkmListings) {
-			List<Component> lore = ListingInfo.parse(listing);
+			List<Component> lore = new ArrayList<>();
 			lore.addAll(PokemonInfo.parse(listing));
+			lore.addAll(ListingInfo.parse(listing));
 
 			Button button = GooeyButton.builder()
 					.display(PokemonItem.from(listing.getListing(), 1))
