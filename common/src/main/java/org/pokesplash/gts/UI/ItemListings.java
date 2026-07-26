@@ -12,7 +12,6 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Unit;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.ItemLore;
 import org.jetbrains.annotations.NotNull;
 import org.pokesplash.gts.Gts;
@@ -143,6 +142,7 @@ public class ItemListings {
                 .set(45, PreviousPage.getButton())
                 .set(53, NextPage.getButton())
 
+                .set(50, HistoryButton.getButton(Sort.DATE_REVERSED))
                 .set(51, ManageListings.getButton())
                 .set(52, RelistAll.getButton())
                 .build();

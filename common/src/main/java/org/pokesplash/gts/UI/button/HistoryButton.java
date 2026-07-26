@@ -5,22 +5,22 @@ import ca.landonjw.gooeylibs2.api.button.Button;
 import ca.landonjw.gooeylibs2.api.button.GooeyButton;
 import ca.landonjw.gooeylibs2.api.page.Page;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Unit;
-import org.pokesplash.gts.Gts;
+import net.minecraft.world.item.Items;
+import org.pokesplash.gts.UI.History;
 import org.pokesplash.gts.enumeration.Sort;
-import org.pokesplash.gts.util.ColorUtil;
 
-public abstract class ExpiredListings {
-    public static Button getButton() {
+public class HistoryButton {
+    public static Button getButton(Sort sort) {
         return GooeyButton.builder()
-                .display(Gts.language.getExpiredListingsButtonItem())
-                .with(DataComponents.CUSTOM_NAME,
-                        ColorUtil.parse(Gts.language.getExpiredListingButtonLabel()))
+                .display(Items.ENDER_CHEST.getDefaultInstance())
+                .with(DataComponents.CUSTOM_NAME, Component.literal("§8History"))
                 .with(DataComponents.HIDE_ADDITIONAL_TOOLTIP, Unit.INSTANCE)
                 .onClick((action) -> {
                     ServerPlayer sender = action.getPlayer();
-                    Page page = new org.pokesplash.gts.UI.ExpiredListings().getPage(action.getPlayer().getUUID(), Sort.DATE_REVERSED);
+                    Page page = new History().getPage(action.getPlayer().getUUID(), sort);
                     UIManager.openUIForcefully(sender, page);
                 })
                 .build();

@@ -10,8 +10,8 @@ import ca.landonjw.gooeylibs2.api.template.types.ChestTemplate;
 import com.cobblemon.mod.common.item.PokemonItem;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.Unit;
 import net.minecraft.world.item.component.ItemLore;
+import org.jetbrains.annotations.NotNull;
 import org.pokesplash.gts.Gts;
 import org.pokesplash.gts.UI.button.ManageListings;
 import org.pokesplash.gts.UI.button.*;
@@ -35,7 +35,7 @@ public class History {
 	 * Method that returns the page.
 	 * @return Listings page.
 	 */
-	public Page getPage(UUID owner) {
+	public Page getPage(UUID owner, @NotNull Sort sort) {
 
 		PlaceholderButton placeholder = new PlaceholderButton();
 
@@ -55,22 +55,14 @@ public class History {
 				// Standard lore for any item.
 				List<Component> lore = new ArrayList<>();
 
-				lore.add(ColorUtil.parse(Gts.language.getSeller() + item.getSellerName()));
-				lore.add(ColorUtil.parse(Gts.language.getPrice() + item.getPriceAsString()));
-				lore.add(ColorUtil.parse(Gts.language.getBuyer() + item.getBuyerName()));
-
-				String pattern = "d MMMM yyyy";
-				SimpleDateFormat format = new SimpleDateFormat(pattern);
-
-				lore.add(ColorUtil.parse(Gts.language.getSold_date() +
-						format.format(new Date(item.getSoldDate()))));
-
 				Button button = null;
 
 				// Pokemon specific lore and button.
 				if (item.isPokemon()) {
 					PokemonHistoryItem pokemonItem = (PokemonHistoryItem) item;
 					lore.addAll(PokemonInfo.parse(pokemonItem.getListing()));
+
+					setHistoryLore(lore, item);
 
 					button = GooeyButton.builder()
 							.display(PokemonItem.from(pokemonItem.getListing(), 1))
@@ -83,11 +75,19 @@ public class History {
 					ItemHistoryItem itemHistoryItem = (ItemHistoryItem) item;
 
 					if (itemHistoryItem.getListing() != null) {
+						ItemLore itemLore = itemHistoryItem.getListing().get(DataComponents.LORE);
+
+						if (itemLore != null) {
+							lore.addAll(itemLore.lines());
+						}
+
+						setHistoryLore(lore, item);
+
 						button = GooeyButton.builder()
 								.display(itemHistoryItem.getListing())
 								.with(DataComponents.CUSTOM_NAME, itemHistoryItem.getDisplayName())
 								.with(DataComponents.LORE, new ItemLore(lore))
-								.with(DataComponents.HIDE_ADDITIONAL_TOOLTIP, Unit.INSTANCE)
+								//.with(DataComponents.HIDE_ADDITIONAL_TOOLTIP, Unit.INSTANCE)
 								.build();
 					}
 				}
@@ -100,11 +100,15 @@ public class History {
 		}
 
 		ChestTemplate template = ChestTemplate.builder(6)
-				.rectangle(0, 0, 5, 9, placeholder)
+				.rectangle(1, 0, 4, 9, placeholder)
 				.fill(Filler.getButton())
-				.set(48, SeePokemonListings.getButton(Sort.DATE_REVERSED))
-				.set(49, ManageListings.getButton())
-				.set(50, SeeItemListings.getButton(Sort.DATE_REVERSED))
+				.set(0, SeePokemonListings.getButton(sort))
+				.set(1, SeeItemListings.getButton(sort))
+				.set(2, SeeAllListings.getButton(sort))
+
+				.set(51, ManageListings.getButton())
+				.set(52, RelistAll.getButton())
+
 				.set(53, NextPage.getButton())
 				.set(45, PreviousPage.getButton())
 				.build();
@@ -124,5 +128,19 @@ public class History {
 			next.setTitle(Gts.language.getHistoryTitle());
 			setPageTitle(next);
 		}
+	}
+
+	public void setHistoryLore(List<Component> lore, HistoryItem item) {
+		lore.add(Component.literal(""));
+		lore.add(ColorUtil.parse(Gts.language.getSeller() + item.getSellerName()));
+		lore.add(ColorUtil.parse(Gts.language.getPrice() + item.getPriceAsString()));
+		lore.add(ColorUtil.parse(Gts.language.getBuyer() + item.getBuyerName()));
+
+		String pattern = "d MMMM yyyy";
+		SimpleDateFormat format = new SimpleDateFormat(pattern);
+
+		lore.add(ColorUtil.parse(Gts.language.getSold_date() +
+				format.format(new Date(item.getSoldDate()))));
+		lore.add(Component.literal(""));
 	}
 }

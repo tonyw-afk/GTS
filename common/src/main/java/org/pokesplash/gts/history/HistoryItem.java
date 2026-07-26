@@ -55,7 +55,7 @@ public abstract class HistoryItem<T> {
     }
 
     public String getPriceAsString() {
-        DecimalFormat df = new DecimalFormat("0.##");
+        DecimalFormat df = new DecimalFormat("#,##0");
         return df.format(price);
     }
 

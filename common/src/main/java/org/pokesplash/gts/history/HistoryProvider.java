@@ -97,8 +97,8 @@ public class HistoryProvider {
 		for (PlayerHistory h : getHistory().values()) {
 			for (ItemHistoryItem item : h.getItemListings()) {
 				if (ItemStack.isSameItemSameComponents(item.getListing(), itemStack)) {
-					total += item.getPrice();
-					amount ++;
+					total += (item.getPrice() / item.getListing().getCount());
+					amount++;
 				}
 			}
 		}

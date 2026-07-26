@@ -10,6 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import org.pokesplash.gts.Gts;
 import org.pokesplash.gts.command.superclass.Subcommand;
+import org.pokesplash.gts.enumeration.Sort;
 
 public class History extends Subcommand {
 
@@ -52,7 +53,7 @@ public class History extends Subcommand {
 		ServerPlayer sender = context.getSource().getPlayer();
 
 		try {
-			Page page = new org.pokesplash.gts.UI.History().getPage(sender.getUUID());
+			Page page = new org.pokesplash.gts.UI.History().getPage(sender.getUUID(), Sort.DATE_REVERSED);
 
 			UIManager.openUIForcefully(sender, page);
 		} catch (Exception e) {

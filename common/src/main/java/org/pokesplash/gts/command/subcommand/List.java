@@ -1,5 +1,7 @@
 package org.pokesplash.gts.command.subcommand;
 
+import ca.landonjw.gooeylibs2.api.UIManager;
+import ca.landonjw.gooeylibs2.api.page.Page;
 import com.cobblemon.mod.common.Cobblemon;
 import com.cobblemon.mod.common.api.battles.model.PokemonBattle;
 import com.cobblemon.mod.common.api.storage.party.PlayerPartyStore;
@@ -22,7 +24,7 @@ import org.pokesplash.gts.Gts;
 import org.pokesplash.gts.Listing.ItemListing;
 import org.pokesplash.gts.Listing.Listing;
 import org.pokesplash.gts.Listing.PokemonListing;
-import org.pokesplash.gts.api.GtsAPI;
+import org.pokesplash.gts.UI.ConfirmListing;
 import org.pokesplash.gts.command.superclass.Subcommand;
 import org.pokesplash.gts.config.options.ItemPrices;
 import org.pokesplash.gts.config.options.PokemonAspects;
@@ -30,6 +32,7 @@ import org.pokesplash.gts.config.options.PokemonPrices;
 import org.pokesplash.gts.util.CodecUtils;
 import org.pokesplash.gts.util.Utils;
 
+import javax.swing.*;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -74,16 +77,16 @@ public class List extends Subcommand {
 								})
 								.executes(this::showPokemonUsage)
 								.then(Commands.argument("price", FloatArgumentType.floatArg())
-										.suggests((ctx, builder) -> {
-
-											for (double price : Gts.config.getAllPokemonPrices()) {
-												if (price > 0) {
-													builder.suggest((int) price);
-												}
-											}
-
-											return builder.buildFuture();
-										})
+//										.suggests((ctx, builder) -> {
+//
+//											for (double price : Gts.config.getAllPokemonPrices()) {
+//												if (price > 0) {
+//													builder.suggest((int) price);
+//												}
+//											}
+//
+//											return builder.buildFuture();
+//										})
 										.executes(this::run))))
 				.then(Commands.literal("item")
 						.requires(ctx -> {
@@ -95,29 +98,29 @@ public class List extends Subcommand {
 						})
 						.executes(this::showItemUsage)
 						.then(Commands.argument("price", FloatArgumentType.floatArg())
-								.suggests((ctx, builder) -> {
-									for (int i = 1; i <= 11; i++) {
-										builder.suggest(i * 100);
-									}
-									return builder.buildFuture();
-								})
+//								.suggests((ctx, builder) -> {
+//									for (int i = 1; i <= 11; i++) {
+//										builder.suggest(i * 100);
+//									}
+//									return builder.buildFuture();
+//								})
 								.executes(this::showItemUsage)
 								.then(Commands.argument("amount", IntegerArgumentType.integer())
-										.suggests((ctx, builder) -> {
-											for (int i = 0; i <= 64; i++) {
-												builder.suggest(i + 1);
-											}
-											return builder.buildFuture();
-										})
-										.executes(this::run)
-										.then(Commands.argument("stackSize", IntegerArgumentType.integer())
-												.suggests((ctx, builder) -> {
-													for (int i = 1; i <= 32; i++) {
-														builder.suggest(i);
-													}
-													return builder.buildFuture();
-												})
-												.executes(this::run)))))
+//										.suggests((ctx, builder) -> {
+//											for (int i = 0; i <= 64; i++) {
+//												builder.suggest(i + 1);
+//											}
+//											return builder.buildFuture();
+//										})
+										.executes(this::run))))
+//										.then(Commands.argument("totalListings", IntegerArgumentType.integer())
+//												.suggests((ctx, builder) -> {
+//													for (int i = 1; i <= 32; i++) {
+//														builder.suggest(i);
+//													}
+//													return builder.buildFuture();
+//												})
+//												.executes(this::run)))))
 				.build();
 	}
 
@@ -147,6 +150,7 @@ public class List extends Subcommand {
 		}
 
 		try {
+			// Check in battle
 			PokemonBattle battle =
 					BattleRegistry.getBattleByParticipatingPlayer(context.getSource().getPlayer());
 
@@ -157,6 +161,7 @@ public class List extends Subcommand {
 				return 1;
 			}
 
+			// Check if max listings already
 			int totalListings = Gts.listings.getListingsByPlayer(context.getSource().getPlayer().getUUID()).size();
 
 			java.util.List<Listing> expiredListings = Gts.listings.getExpiredListingsOfPlayer(
@@ -173,6 +178,7 @@ public class List extends Subcommand {
 				return 1;
 			}
 
+			// Complete listing for pokemon or item
 			if (context.getInput().contains("pokemon")) {
 				return runPokemon(context);
 			} else {
@@ -307,19 +313,24 @@ public class List extends Subcommand {
 
 		PokemonListing listing = new PokemonListing(player.getUUID(), player.getName().getString(), price, pokemon);
 
-		boolean success = GtsAPI.addListing(listing, player, slot);
-
-		if (success) {
-			context.getSource().sendSystemMessage(Component.literal(Utils.formatPlaceholders(Gts.language.getListingSuccess(),
-					minPrice, speciesName, player.getDisplayName().getString(), null, price)));
+		// ADD CONFIRMING SCREEN HERE
+		Page page = new ConfirmListing().getPage(player, listing, slot, minPrice, speciesName, price);
+		UIManager.openUIForcefully(player, page);
 
 
-		} else {
-			context.getSource().sendSystemMessage(Component.literal(Utils.formatPlaceholders(Gts.language.getListingFail(),
-					minPrice, speciesName, player.getDisplayName().getString(), null, price)));
-
-
-		}
+//		boolean success = GtsAPI.addListing(listing, player, slot);
+//
+//		if (success) {
+//			context.getSource().sendSystemMessage(Component.literal(Utils.formatPlaceholders(Gts.language.getListingSuccess(),
+//					minPrice, speciesName, player.getDisplayName().getString(), null, price)));
+//
+//
+//		} else {
+//			context.getSource().sendSystemMessage(Component.literal(Utils.formatPlaceholders(Gts.language.getListingFail(),
+//					minPrice, speciesName, player.getDisplayName().getString(), null, price)));
+//
+//
+//		}
 
 		return 1;
 	}
@@ -329,13 +340,13 @@ public class List extends Subcommand {
 		int amount = IntegerArgumentType.getInteger(context, "amount");
 		double price = FloatArgumentType.getFloat(context, "price");
 
-		int stackSize;
-
-		try {
-			stackSize = IntegerArgumentType.getInteger(context, "stackSize");
-		} catch (Exception e) {
-			stackSize = amount;
-		}
+//		int stackSize;
+//
+//		try {
+//			stackSize = IntegerArgumentType.getInteger(context, "totalListings");
+//		} catch (Exception e) {
+//			stackSize = amount;
+//		}
 
 
 		java.util.List<ItemPrices> minPrices = Gts.config.getCustomItemPrices();
@@ -441,17 +452,17 @@ public class List extends Subcommand {
 
 			}
 
-			if (stackSize > amount || amount % stackSize != 0) {
-				context.getSource().sendSystemMessage(
-						Component.literal("The stack size can not be divided by amount."));
-				return 1;
-			}
-
-			// Finds the amount of stacks to create.
-			int numberOfStacks = amount / stackSize;
-
+//			if (stackSize > amount || amount % stackSize != 0) {
+//				context.getSource().sendSystemMessage(
+//						Component.literal("The total listings can not be divided by amount."));
+//				return 1;
+//			}
+//
+//			// Finds the amount of stacks to create.
+//			int numberOfStacks = amount / stackSize;
+//
 			// For each stack, create a listing.
-			for (int i = 0; i < numberOfStacks; i++) {
+			for (int i = 0; i < 1; i++) {
 
 				int totalActiveListings = Gts.listings.getListingsByPlayer(player.getUUID()).size();
 				int totalExpiredListigs = Gts.listings.getExpiredListingsOfPlayer(player.getUUID()).size();
@@ -465,24 +476,28 @@ public class List extends Subcommand {
 				}
 
 				ItemStack listingItem = item.copy();
-				listingItem.setCount(stackSize);
+				listingItem.setCount(amount);
 
 				// Creates the listing on GTS
 				ItemListing listing = new ItemListing(player.getUUID(), player.getName().getString(), price,
 						listingItem);
 
-				boolean success = GtsAPI.addListing(listing, player, null);
+				// ADD CONFIRMING SCREEN HERE
+				Page page = new ConfirmListing().getPage(player, listing, null, minPrice, listing.getListingName(), price);
+				UIManager.openUIForcefully(player, page);
 
-				if (success) {
-					context.getSource().sendSystemMessage(Component.literal(Utils.formatPlaceholders(Gts.language.getListingSuccess(),
-							minPrice, listing.getListingName(), player.getDisplayName().getString(), null, price)));
-
-				} else {
-					context.getSource().sendSystemMessage(Component.literal(Utils.formatPlaceholders(Gts.language.getListingFail(),
-							minPrice, listing.getListingName(), player.getDisplayName().getString(), null, price)));
-
-
-				}
+//				boolean success = GtsAPI.addListing(listing, player, null);
+//
+//				if (success) {
+//					context.getSource().sendSystemMessage(Component.literal(Utils.formatPlaceholders(Gts.language.getListingSuccess(),
+//							minPrice, listing.getListingName(), player.getDisplayName().getString(), null, price)));
+//
+//				} else {
+//					context.getSource().sendSystemMessage(Component.literal(Utils.formatPlaceholders(Gts.language.getListingFail(),
+//							minPrice, listing.getListingName(), player.getDisplayName().getString(), null, price)));
+//
+//
+//				}
 			}
 
 

@@ -1,11 +1,8 @@
 package org.pokesplash.gts.UI.module;
 
-import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.ItemLore;
 import org.pokesplash.gts.Gts;
 import org.pokesplash.gts.Listing.ItemListing;
@@ -83,7 +80,7 @@ public abstract class ListingInfo {
             lore.add(ColorUtil.parse(Gts.language.getRemainingTime() +
                     Utils.parseLongDate(listing.getEndTime() - new Date().getTime())));
         }
-
+        lore.add(Component.literal(""));
 
         return lore;
     }
