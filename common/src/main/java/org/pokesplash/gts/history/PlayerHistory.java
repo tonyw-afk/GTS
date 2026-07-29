@@ -31,6 +31,7 @@ public class PlayerHistory implements History {
 		listings = new ArrayList<>();
 		if (HistoryAPI.getHighestPriority() == null) {
 			Utils.checkForDirectory(HistoryProvider.filePath + playerUUID + "/");
+			Utils.checkForDirectory(HistoryProvider.filePathBoughtHistory + playerUUID + "/");
 		}
 	}
 
@@ -102,6 +103,7 @@ public class PlayerHistory implements History {
 		HistoryItem item = listing.isPokemon() ? new PokemonHistoryItem((PokemonListing) listing, buyerName) :
 				new ItemHistoryItem((ItemListing) listing, buyerName);
 		item.write();
+		item.writeWhoBought();
 		listings.add(item);
 	}
 

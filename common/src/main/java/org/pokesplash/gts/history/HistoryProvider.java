@@ -21,127 +21,124 @@ import java.util.UUID;
  * Class that provides and controls player history.
  */
 public class HistoryProvider {
-	// path the player history are written to.
-	public static final String filePath = "/config/gts/history/";
-	private static final String brokeFilesPath = "/config/gts/invalid/history/";
-	// Storage of player history.
-	protected HashMap<UUID, PlayerHistory> history;
+    // path the player history are written to.
+    public static final String filePath = "/config/gts/history/";
+    public static final String filePathBoughtHistory = "/config/gts/historyBought/";
+    private static final String brokeFilesPath = "/config/gts/invalid/history/";
+    // Storage of player history.
+    protected HashMap<UUID, PlayerHistory> history;
 
-	/**
-	 * Constructor to create the history class.
-	 */
-	public HistoryProvider() {
-		history = new HashMap<>();
-	}
+    /**
+     * Constructor to create the history class.
+     */
+    public HistoryProvider() {
+        history = new HashMap<>();
+    }
 
-	public HashMap<UUID, PlayerHistory> getHistory() {
-		return history;
-	}
+    public HashMap<UUID, PlayerHistory> getHistory() {
+        return history;
+    }
 
-	protected void putHistory(UUID uuid, PlayerHistory playerHistory) {
-		history.put(uuid, playerHistory);
-	}
+    protected void putHistory(UUID uuid, PlayerHistory playerHistory) {
+        history.put(uuid, playerHistory);
+    }
 
-	protected void removeHistory(UUID uuid) {
-		history.remove(uuid);
-	}
+    protected void removeHistory(UUID uuid) {
+        history.remove(uuid);
+    }
 
-	/**
-	 * Method to get the history of a player.
-	 * @param player The player to get the history of.
-	 * @return The history of the player, or null.
-	 */
-	public PlayerHistory getPlayerHistory(UUID player) {
-		if (getHistory().get(player) == null) {
-			if (HistoryAPI.getHighestPriority() == null) {
-				new PlayerHistory(player);
-			} else {
-				putHistory(player, new PlayerHistory(player));
-			}
+    /**
+     * Method to get the history of a player.
+     *
+     * @param player The player to get the history of.
+     * @return The history of the player, or null.
+     */
+    public PlayerHistory getPlayerHistory(UUID player) {
+        if (getHistory().get(player) == null) {
+            if (HistoryAPI.getHighestPriority() == null) {
+                new PlayerHistory(player);
+            } else {
+                putHistory(player, new PlayerHistory(player));
+            }
 
-		}
-		return getHistory().get(player);
-	}
+        }
+        return getHistory().get(player);
+    }
 
-	public HistoryItem findHistoryById(UUID id) {
-		for (PlayerHistory h : getHistory().values()) {
-			for (HistoryItem item : h.getListings()) {
-				if (item.getId().equals(id)) {
-					return item;
-				}
-			}
-		}
+    public HistoryItem findHistoryById(UUID id) {
+        for (PlayerHistory h : getHistory().values()) {
+            for (HistoryItem item : h.getListings()) {
+                if (item.getId().equals(id)) {
+                    return item;
+                }
+            }
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	public void updateHistory(PlayerHistory history) {
-		putHistory(history.getPlayer(), history);
-	}
+    public void updateHistory(PlayerHistory history) {
+        putHistory(history.getPlayer(), history);
+    }
 
-	public void addHistoryItem(Listing item, String buyerName) {
-		if (getHistory().get(item.getSellerUuid()) == null) {
-			putHistory(item.getSellerUuid(), new PlayerHistory(item.getSellerUuid()));
-		}
+    public void addHistoryItem(Listing item, String buyerName) {
+        if (getHistory().get(item.getSellerUuid()) == null) {
+            putHistory(item.getSellerUuid(), new PlayerHistory(item.getSellerUuid()));
+        }
 
-		PlayerHistory playerHistory = getHistory().get(item.getSellerUuid());
-		playerHistory.addListing(item, buyerName);
-		putHistory(item.getSellerUuid(), playerHistory);
-	}
+        PlayerHistory playerHistory = getHistory().get(item.getSellerUuid());
+        playerHistory.addListing(item, buyerName);
+        putHistory(item.getSellerUuid(), playerHistory);
+    }
 
-	public double getAveragePrice(ItemStack itemStack) {
+    public double getAveragePrice(ItemStack itemStack) {
 
-		double total = 0;
-		int amount = 0;
+        double total = 0;
+        int amount = 0;
 
-		for (PlayerHistory h : getHistory().values()) {
-			for (ItemHistoryItem item : h.getItemListings()) {
-				if (ItemStack.isSameItemSameComponents(item.getListing(), itemStack)) {
-					total += (item.getPrice() / item.getListing().getCount());
-					amount++;
-				}
-			}
-		}
+        for (PlayerHistory h : getHistory().values()) {
+            for (ItemHistoryItem item : h.getItemListings()) {
+                if (ItemStack.isSameItemSameComponents(item.getListing(), itemStack)) {
+                    total += (item.getPrice() / item.getListing().getCount());
+                    amount++;
+                }
+            }
+        }
 
-		if (total == 0) {
-			return 0;
-		}
+        if (total == 0) {
+            return 0;
+        }
 
-		BigDecimal bd = BigDecimal.valueOf(total / amount);
-		return bd.setScale(2, RoundingMode.HALF_UP).doubleValue();
-	}
+        BigDecimal bd = BigDecimal.valueOf(total / amount);
+        return bd.setScale(2, RoundingMode.HALF_UP).doubleValue();
+    }
 
-	public double getAveragePrice(Pokemon pokemon) {
-		double total = 0;
-		int amount = 0;
+    public double getAveragePrice(Pokemon pokemon) {
+        double total = 0;
+        int amount = 0;
 
-		for (PlayerHistory h : getHistory().values()) {
-			for (PokemonHistoryItem mon : h.getPokemonListings()) {
-				if (mon.getListing().getSpecies().getNationalPokedexNumber() ==
-				pokemon.getSpecies().getNationalPokedexNumber()) {
-					total += mon.getPrice();
-					amount ++;
-				}
-			}
-		}
+        for (PlayerHistory h : getHistory().values()) {
+            for (PokemonHistoryItem mon : h.getPokemonListings()) {
+                if (mon.getListing().getSpecies().getNationalPokedexNumber() ==
+                        pokemon.getSpecies().getNationalPokedexNumber()) {
+                    total += mon.getPrice();
+                    amount++;
+                }
+            }
+        }
 
-		if (total == 0) {
-			return 0;
-		}
+        if (total == 0) {
+            return 0;
+        }
 
-		BigDecimal bd = BigDecimal.valueOf(total / amount);
-		return bd.setScale(2, RoundingMode.HALF_UP).doubleValue();
-	}
+        BigDecimal bd = BigDecimal.valueOf(total / amount);
+        return bd.setScale(2, RoundingMode.HALF_UP).doubleValue();
+    }
 
-	/**
-	 * Method to initialize the HistoryProvider object with all PlayerHistory in file.
-	 */
-	public void init() {
-		File dir = Utils.checkForDirectory(filePath);
+    public void readHistory(File dir, String filePath) {
+        File[] files = dir.listFiles();
 
-		File[] files = dir.listFiles();
-
-		for (File file : files) {
+        for (File file : files) {
 
             File[] playerFiles = file.listFiles();
             // A list of the players history.
@@ -192,6 +189,17 @@ public class HistoryProvider {
 
             // Adds the player history to memory.
             putHistory(playerId, new PlayerHistory(playerId, items));
-		}
-	}
+        }
+    }
+
+    /**
+     * Method to initialize the HistoryProvider object with all PlayerHistory in file.
+     */
+    public void init() {
+        File dir = Utils.checkForDirectory(filePath);
+        File dir2 = Utils.checkForDirectory(filePathBoughtHistory);
+
+        readHistory(dir, filePath);
+        readHistory(dir2, filePathBoughtHistory);
+    }
 }

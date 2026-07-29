@@ -22,6 +22,7 @@ public abstract class HistoryItem<T> {
     private double price; // The price the listings sold for.
     private long soldDate; // The date the listings was sold.
     private String buyerName; // The name of the person who bought it.
+    private UUID buyerUuid; // UUID of the person who bought it
 
 
     public HistoryItem(boolean isPokemon, UUID sellerUuid, String sellerName, double price, String buyerName) {
@@ -32,6 +33,7 @@ public abstract class HistoryItem<T> {
         this.price = price;
         this.soldDate = new Date().getTime();
         this.buyerName = buyerName;
+        //this.buyerUuid = ;
     }
 
     public boolean isPokemon() {
@@ -83,6 +85,15 @@ public abstract class HistoryItem<T> {
 
 
         Utils.writeFileAsync(HistoryProvider.filePath + sellerUuid + "/",
+                id + ".json", Utils.newGson().toJson(this));
+    }
+
+    public void writeWhoBought() {
+        if (HistoryAPI.getHighestPriority() != null) {
+            HistoryAPI.getHighestPriority().write(this);
+        }
+
+        Utils.writeFileAsync(HistoryProvider.filePathBoughtHistory + buyerUuid + "/",
                 id + ".json", Utils.newGson().toJson(this));
     }
 
