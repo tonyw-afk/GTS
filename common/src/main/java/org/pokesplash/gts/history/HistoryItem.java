@@ -1,5 +1,6 @@
 package org.pokesplash.gts.history;
 
+import com.mojang.authlib.GameProfile;
 import net.minecraft.network.chat.MutableComponent;
 import org.pokesplash.gts.Gts;
 import org.pokesplash.gts.api.provider.HistoryAPI;
@@ -33,7 +34,7 @@ public abstract class HistoryItem<T> {
         this.price = price;
         this.soldDate = new Date().getTime();
         this.buyerName = buyerName;
-        //this.buyerUuid = ;
+        this.buyerUuid = Gts.server.getPlayerList().getPlayerByName(buyerName).getUUID();
     }
 
     public boolean isPokemon() {
