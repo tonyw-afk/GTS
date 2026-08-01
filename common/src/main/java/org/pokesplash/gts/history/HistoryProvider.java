@@ -90,6 +90,15 @@ public class HistoryProvider {
         playerHistory.addListing(item, buyerName);
         putHistory(item.getSellerUuid(), playerHistory);
     }
+    public void addHistoryBoughtItem(Listing item, String buyerName) {
+        if (getHistory().get(Gts.server.getPlayerList().getPlayerByName(buyerName).getUUID()) == null) {
+            putHistory(Gts.server.getPlayerList().getPlayerByName(buyerName).getUUID(), new PlayerHistory(Gts.server.getPlayerList().getPlayerByName(buyerName).getUUID()));
+        }
+
+        PlayerHistory playerHistory = getHistory().get(Gts.server.getPlayerList().getPlayerByName(buyerName).getUUID());
+        playerHistory.addListingBought(item, buyerName);
+        putHistory(Gts.server.getPlayerList().getPlayerByName(buyerName).getUUID(), playerHistory);
+    }
 
     public double getAveragePrice(ItemStack itemStack) {
 
@@ -135,10 +144,19 @@ public class HistoryProvider {
         return bd.setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 
-    public void readHistory(File dir, String filePath) {
+    public HashMap<UUID, ArrayList<HistoryItem>> readHistory(File dir, String filePath) {
         File[] files = dir.listFiles();
+        HashMap<UUID, ArrayList<HistoryItem>> map = new HashMap<>();
+
+        Gts.LOGGER.info(String.valueOf(files.length));
+
+        for (File f : files) {
+            Gts.LOGGER.info(f.toString());
+        }
+
 
         for (File file : files) {
+            Gts.LOGGER.info(filePath + file.getName());
 
             File[] playerFiles = file.listFiles();
             // A list of the players history.
@@ -188,8 +206,12 @@ public class HistoryProvider {
             }
 
             // Adds the player history to memory.
-            putHistory(playerId, new PlayerHistory(playerId, items));
+            //putHistory(playerId, new PlayerHistory(playerId, items));
+            if(!items.isEmpty()) {
+                map.put(playerId, items);
+            }
         }
+        return map;
     }
 
     /**
@@ -199,7 +221,37 @@ public class HistoryProvider {
         File dir = Utils.checkForDirectory(filePath);
         File dir2 = Utils.checkForDirectory(filePathBoughtHistory);
 
-        readHistory(dir, filePath);
-        readHistory(dir2, filePathBoughtHistory);
+        HashMap<UUID, ArrayList<HistoryItem>> map = new HashMap<>();
+        HashMap<UUID, ArrayList<HistoryItem>> history = readHistory(dir, filePath);
+        HashMap<UUID, ArrayList<HistoryItem>> historyBought = readHistory(dir2, filePathBoughtHistory);
+
+        Gts.LOGGER.info("History " + history.keySet().toString());
+        Gts.LOGGER.info("HistoryBought " + historyBought.keySet().toString());
+
+        if(!history.isEmpty()) {
+            history.forEach((key, value) ->
+                    map.merge(key, value, (oldList, newList) -> {
+                        oldList.addAll(newList);
+                        return oldList;
+                    })
+            );
+        }
+
+        if(!historyBought.isEmpty()) {
+            historyBought.forEach((key, value) ->
+                    map.merge(key, value, (oldList, newList) -> {
+                        oldList.addAll(newList);
+                        return oldList;
+                    })
+            );
+        }
+
+        if(!map.isEmpty()) {
+            Gts.LOGGER.info(map.keySet().toString());
+            map.keySet().forEach((uuid) -> {
+                putHistory(uuid, new PlayerHistory(uuid, map.get(uuid)));
+
+            });
+        }
     }
 }

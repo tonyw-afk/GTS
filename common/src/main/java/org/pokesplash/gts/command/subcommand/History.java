@@ -15,7 +15,7 @@ import org.pokesplash.gts.enumeration.Sort;
 public class History extends Subcommand {
 
 	public History() {
-		super("§9Usage:\n§3- gts history");
+		super("§9Usage:\n§3- gts soldhistory");
 	}
 
 	/**
@@ -24,7 +24,7 @@ public class History extends Subcommand {
 	 */
 	@Override
 	public LiteralCommandNode<CommandSourceStack> build() {
-		return Commands.literal("history")
+		return Commands.literal("soldhistory")
 				.requires(ctx -> {
 					if (ctx.isPlayer()) {
 						return Gts.permissions.hasPermission(ctx.getPlayer(),
@@ -53,7 +53,7 @@ public class History extends Subcommand {
 		ServerPlayer sender = context.getSource().getPlayer();
 
 		try {
-			Page page = new org.pokesplash.gts.UI.History().getPage(sender.getUUID(), Sort.DATE_REVERSED);
+			Page page = new org.pokesplash.gts.UI.History().getPage(sender.getUUID(), Sort.NONE);
 
 			UIManager.openUIForcefully(sender, page);
 		} catch (Exception e) {

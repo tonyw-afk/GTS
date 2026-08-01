@@ -70,6 +70,8 @@ public abstract class HistoryItem<T> {
         return buyerName;
     }
 
+    public  UUID getBuyerUuid() {return  buyerUuid;}
+
     public abstract T getListing(); // The object that has been listed.
 
     public String getVersion() {

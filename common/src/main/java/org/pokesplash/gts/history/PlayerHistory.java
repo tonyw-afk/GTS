@@ -103,6 +103,16 @@ public class PlayerHistory implements History {
 		HistoryItem item = listing.isPokemon() ? new PokemonHistoryItem((PokemonListing) listing, buyerName) :
 				new ItemHistoryItem((ItemListing) listing, buyerName);
 		item.write();
+		listings.add(item);
+	}
+
+	/**
+	 * Method to add a new listing to the players history (Once it has been sold).
+	 * @param listing The listing to add.
+	 */
+	public void addListingBought(Listing listing, String buyerName) {
+		HistoryItem item = listing.isPokemon() ? new PokemonHistoryItem((PokemonListing) listing, buyerName) :
+				new ItemHistoryItem((ItemListing) listing, buyerName);
 		item.writeWhoBought();
 		listings.add(item);
 	}

@@ -9,18 +9,18 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Unit;
 import net.minecraft.world.item.Items;
-import org.pokesplash.gts.UI.History;
+import org.pokesplash.gts.UI.HistoryBought;
 import org.pokesplash.gts.enumeration.Sort;
 
-public class HistoryButton {
+public class HistoryBoughtButton {
     public static Button getButton() {
         return GooeyButton.builder()
-                .display(Items.CHEST.getDefaultInstance())
-                .with(DataComponents.CUSTOM_NAME, Component.literal("§cSold History"))
+                .display(Items.EMERALD.getDefaultInstance())
+                .with(DataComponents.CUSTOM_NAME, Component.literal("§aPurchase History"))
                 .with(DataComponents.HIDE_ADDITIONAL_TOOLTIP, Unit.INSTANCE)
                 .onClick((action) -> {
                     ServerPlayer sender = action.getPlayer();
-                    Page page = new History().getPage(action.getPlayer().getUUID(), Sort.NONE);
+                    Page page = new HistoryBought().getPage(action.getPlayer().getUUID(), Sort.NONE);
                     UIManager.openUIForcefully(sender, page);
                 })
                 .build();

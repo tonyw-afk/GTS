@@ -142,6 +142,7 @@ public abstract class GtsAPI {
 		listing.delete(Gts.LISTING_FILE_PATH);
 
 		Gts.history.addHistoryItem(listing, buyer.getName().getString());
+		Gts.history.addHistoryBoughtItem(listing, buyer.getName().getString());
 
 		GtsEvents.PURCHASE.trigger(new PurchaseEvent(buyer, listing));
 

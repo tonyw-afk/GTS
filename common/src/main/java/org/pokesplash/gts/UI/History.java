@@ -45,56 +45,69 @@ public class History {
 
 		if (playerHistory != null) {
 			// Gets all the items and sorts them by the sold date.
-			List<HistoryItem> items = playerHistory.getListings();
-			items.sort(Comparator.comparing(HistoryItem::getSoldDate));
-			Collections.reverse(items);
-
-			// For each item, create a button.
-			for (HistoryItem item : items) {
-
-				// Standard lore for any item.
-				List<Component> lore = new ArrayList<>();
-
-				Button button = null;
-
-				// Pokemon specific lore and button.
-				if (item.isPokemon()) {
-					PokemonHistoryItem pokemonItem = (PokemonHistoryItem) item;
-					lore.addAll(PokemonInfo.parse(pokemonItem.getListing()));
-
-					setHistoryLore(lore, item);
-
-					button = GooeyButton.builder()
-							.display(PokemonItem.from(pokemonItem.getListing(), 1))
-							.with(DataComponents.CUSTOM_NAME, pokemonItem.getDisplayName())
-							.with(DataComponents.LORE, new ItemLore(lore))
-							.build();
+			List<HistoryItem> items = new ArrayList<>(playerHistory.getListings().stream().filter(historyItem -> {
+				if(historyItem.getBuyerUuid() != null && historyItem.getBuyerUuid().equals(owner)) {
+					return false;
 				}
-				// Item specific button.
-				else {
-					ItemHistoryItem itemHistoryItem = (ItemHistoryItem) item;
 
-					if (itemHistoryItem.getListing() != null) {
-						ItemLore itemLore = itemHistoryItem.getListing().get(DataComponents.LORE);
+				if(historyItem.getBuyerName().equals(Gts.server.getPlayerList().getPlayer(owner))) {
+					return false;
+				}
 
-						if (itemLore != null) {
-							lore.addAll(itemLore.lines());
-						}
+				return true;
+			}).toList());
+
+			if(!items.isEmpty()) {
+				items.sort(Comparator.comparing(HistoryItem::getSoldDate));
+				Collections.reverse(items);
+
+				// For each item, create a button.
+				for (HistoryItem item : items) {
+
+					// Standard lore for any item.
+					List<Component> lore = new ArrayList<>();
+
+					Button button = null;
+
+					// Pokemon specific lore and button.
+					if (item.isPokemon()) {
+						PokemonHistoryItem pokemonItem = (PokemonHistoryItem) item;
+						lore.addAll(PokemonInfo.parse(pokemonItem.getListing()));
 
 						setHistoryLore(lore, item);
 
 						button = GooeyButton.builder()
-								.display(itemHistoryItem.getListing())
-								.with(DataComponents.CUSTOM_NAME, itemHistoryItem.getDisplayName())
+								.display(PokemonItem.from(pokemonItem.getListing(), 1))
+								.with(DataComponents.CUSTOM_NAME, pokemonItem.getDisplayName())
 								.with(DataComponents.LORE, new ItemLore(lore))
-								//.with(DataComponents.HIDE_ADDITIONAL_TOOLTIP, Unit.INSTANCE)
 								.build();
 					}
-				}
+					// Item specific button.
+					else {
+						ItemHistoryItem itemHistoryItem = (ItemHistoryItem) item;
 
-				// Adds the button to the list.
-				if (button != null) {
-					buttons.add(button);
+						if (itemHistoryItem.getListing() != null) {
+							ItemLore itemLore = itemHistoryItem.getListing().get(DataComponents.LORE);
+
+							if (itemLore != null) {
+								lore.addAll(itemLore.lines());
+							}
+
+							setHistoryLore(lore, item);
+
+							button = GooeyButton.builder()
+									.display(itemHistoryItem.getListing())
+									.with(DataComponents.CUSTOM_NAME, itemHistoryItem.getDisplayName())
+									.with(DataComponents.LORE, new ItemLore(lore))
+									//.with(DataComponents.HIDE_ADDITIONAL_TOOLTIP, Unit.INSTANCE)
+									.build();
+						}
+					}
+
+					// Adds the button to the list.
+					if (button != null) {
+						buttons.add(button);
+					}
 				}
 			}
 		}
@@ -106,6 +119,8 @@ public class History {
 				.set(1, SeeItemListings.getButton(sort))
 				.set(2, SeeAllListings.getButton(sort))
 
+				.set(46, Barrier.getButton())
+				.set(47, HistoryBoughtButton.getButton())
 				.set(51, ManageListings.getButton())
 				.set(52, RelistAll.getButton())
 
@@ -132,7 +147,7 @@ public class History {
 
 	public void setHistoryLore(List<Component> lore, HistoryItem item) {
 		lore.add(Component.literal(""));
-		lore.add(ColorUtil.parse(Gts.language.getSeller() + item.getSellerName()));
+		//lore.add(ColorUtil.parse(Gts.language.getSeller() + item.getSellerName()));
 		lore.add(ColorUtil.parse(Gts.language.getPrice() + item.getPriceAsString()));
 		lore.add(ColorUtil.parse(Gts.language.getBuyer() + item.getBuyerName()));
 

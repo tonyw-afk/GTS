@@ -76,7 +76,8 @@ public class ExpiredListings {
 				.set(45, PreviousPage.getButton())
 				.set(53, NextPage.getButton())
 
-				.set(50, HistoryButton.getButton(Sort.DATE_REVERSED))
+				.set(46, HistoryButton.getButton())
+				.set(47, HistoryBoughtButton.getButton())
 				.set(51, ManageListings.getButton())
 				.set(52, RelistAll.getButton())
 				.build();
