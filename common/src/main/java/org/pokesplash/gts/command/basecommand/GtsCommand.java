@@ -26,7 +26,7 @@ public class GtsCommand extends BaseCommand {
 			new ThreadFactoryBuilder().setNameFormat("GTS-Search-Thread-#%d").setDaemon(true).build());
 
 	public GtsCommand() {
-		super("marketplace", Arrays.asList("marketplace", "market"),
+		super("gts", Arrays.asList("gts"),
 				"base",
 				Arrays.asList(new Manage(), new Expired(), new List(), new History(),
 						new Reload(), new Open(), new Debug(), new Search(), new GetPrice(), new Timeout(),
